@@ -21,9 +21,9 @@ class UserTable extends Migration
           $table->string('email')->unique();
           $table->enum('type', ['user' ,'admin']);
           $table->string('genre');
-          $table->boolean('active');
+          $table->boolean('active')->default(true);
           $table->string('password');
-          $table->string('slug');
+          $table->string('slug')->nullable();
                 $table->integer('city_id')->unsigned();
                 $table->foreign('city_id')->references('id')->on('city');
           $table->rememberToken();
