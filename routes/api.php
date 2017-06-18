@@ -24,6 +24,8 @@ Route::get('user/wishlist/{id}', ['as' => 'user.wishlist',
                                   'uses' => 'UserController@wishListShow']);
 Route::post('user/avatarImage', ['as' => 'user.avatarImage',
                                 'uses' => 'UserController@getAvatarImage']);
+Route::post('user/register', ['as' => 'register', 
+                              'uses' => 'UserController@register']);
 
 Route::resource('user', 'UserController',
                 ['only' => ['index', 'store', 'update', 'destroy', 'show']]);

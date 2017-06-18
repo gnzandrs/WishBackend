@@ -157,6 +157,27 @@ class UserController extends Controller
     }
 
     /**
+     *  User registration
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $user = $this->userRepo->newUser();
+        $manager = new RegisterManager($user, $request->input('user'));
+        $result = $manager->save();
+
+        if ($result)
+        {
+            $result = $this->userRepo->createDirectoryTree($user);
+        } else {
+            return response()->json($user->errors);
+        }
+
+        return $user->username;
+    }
+
+    /**
      * Wishlist of user by id
      *
      * @param  int  $id

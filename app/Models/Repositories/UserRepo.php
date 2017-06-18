@@ -22,7 +22,7 @@ class UserRepo extends BaseRepo {
     {
         try{
             $public_path = public_path();
-            $base = $public_path."/assets/user/".$user->id;
+            $base = $public_path.'/img/user/'.$user->id;
             $base_img = $base.'/img';
             $base_tmp = $base.'/tmp';
             $base_profile = $base.'/img/profile';
