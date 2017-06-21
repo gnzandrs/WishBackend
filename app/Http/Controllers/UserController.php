@@ -174,7 +174,7 @@ class UserController extends Controller
             return response()->json($user->errors);
         }
 
-        return $user->username;
+        return ['created' => true];
     }
 
     /**
