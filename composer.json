@@ -10,7 +10,8 @@
         "barryvdh/laravel-debugbar": "^2.4",
         "fzaninotto/faker": "^1.6",
         "laravel/framework": "5.4.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "tymon/jwt-auth": "^0.5.12"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
