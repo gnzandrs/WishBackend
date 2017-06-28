@@ -34,7 +34,7 @@ class UserController extends Controller
     /**
      * Check username availability
      *
-     * @return \Illuminate\Http\Response
+     * @return int $available
      */
     public function check($username)
     {
@@ -45,7 +45,7 @@ class UserController extends Controller
     /**
      * Check email existence
      *
-     * @return \Illuminate\Http\Response
+     * @return int $available
      */
     public function checkEmail($email)
     {
@@ -56,7 +56,7 @@ class UserController extends Controller
     /**
      * Get all for a specified country
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $cities
      */
     public function citiesList(Request $request)
     {
@@ -73,29 +73,19 @@ class UserController extends Controller
     /**
      * Get all the countries availables
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $countries
      */
     public function countriesList()
     {
-        $countrys = Country::all();
-        return $countrys;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+        $countries = Country::all();
+        return $countries;
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $response
      */
     public function store(Request $request)
     {
@@ -107,7 +97,7 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $reponse
      */
     public function show($id)
     {
@@ -119,7 +109,7 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $response
      */
     public function update(Request $request, $id)
     {
@@ -132,7 +122,7 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $reponse
      */
     public function destroy($id)
     {
@@ -144,7 +134,7 @@ class UserController extends Controller
      * Avatar image url of user
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $response
      */
     public function getAvatarImage()
     {
@@ -159,7 +149,7 @@ class UserController extends Controller
     /**
      *  User registration
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $response
      */
     public function register(Request $request)
     {
@@ -181,7 +171,7 @@ class UserController extends Controller
      * Wishlist of user by id
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $wishlist
      */
     public function wishListShow($id)
     {
