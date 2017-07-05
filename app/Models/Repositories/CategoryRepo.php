@@ -12,7 +12,7 @@ class CategoryRepo extends BaseRepo {
         return new Category;
     }
 
-    public function getCategories()
+    public function getList()
     {
         return Category::all();
     }

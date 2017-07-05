@@ -6,17 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\Entities\Wish;
 use App\Models\Entities\Log;
 use App\Models\Repositories\WishRepo;
+use App\Models\Repositories\CategoryRepo;
 use App\Models\Repositories\LogRepo;
 
 class CategoryController extends Controller
 {
+    protected $categoryRepo;
     protected $wishRepo;
     protected $logRepo;
 
-    public function __construct(WishRepo $wishRepo, LogRepo $logRepo)
+    public function __construct(CategoryRepo $categoryRepo, WishRepo $wishRepo, LogRepo $logRepo)
     {
-      $this->wishRepo = $wishRepo;
-      $this->logRepo = $logRepo;
+        $this->categoryRepo = $categoryRepo;
+        $this->wishRepo = $wishRepo;
+        $this->logRepo = $logRepo;
     }
 
     /**
@@ -27,9 +30,7 @@ class CategoryController extends Controller
     public function getCategories()
     {
       try {
-          \Log::info("CategoryController getCategories()");
-          $wishs = $this->wishRepo->getList();
-          return $wishs->ToJson();
+          return $this->categoryRepo->getList();
       }
       catch (Exception $e)
       {
