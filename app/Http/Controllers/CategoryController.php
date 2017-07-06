@@ -64,7 +64,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * View of category
+     * All wishes related to a category
      *
      * @param  string  $name
      * @return \Illuminate\Http\Response
@@ -72,7 +72,6 @@ class CategoryController extends Controller
     public function show($name)
     {
       try{
-          \Log::info("CategoryController show($name)");
           $wishs = $this->wishRepo->getListByCategory($name);
           return $wishs;
       }
