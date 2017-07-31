@@ -10,7 +10,6 @@ use App\Models\Hacks\SimpleImage;
 
 class WishRepo extends BaseRepo {
 
-
     protected $destinationImagePath;
 
     public function getModel()
@@ -252,6 +251,13 @@ class WishRepo extends BaseRepo {
         }
     }
 
+    /**
+     * Copy a Wish and return the new one
+     *
+     * @param  int  $wishId
+     * @param  int  $listId
+     * @return \app\Models\Entities\Wish $wish
+     */
     public function copy($wishId, $listId)
     {
         try{
@@ -478,7 +484,14 @@ class WishRepo extends BaseRepo {
         return $result;
     }
 
-    public function afterCopy($wish, $wishIdOrig)
+    /**
+     * Create the directory on the server to image storage
+     * and move the tmp images to this one.
+     * @param  \app\Models\Entities\Wish $wish
+     * @param  int  $wishIdTmp
+     * @return \app\Models\Entities\Wish $wish
+     */
+    public function createDirectoryStructure($wish, $wishIdTmp)
     {
         try{
             $this->createDirectoryTree($wish);
@@ -486,7 +499,7 @@ class WishRepo extends BaseRepo {
             // move images from temp
             $wishlist = $wish->WishList;
             $user = $wishlist->User;
-            $move = $this->moveWishCopyImage($user->id, $wish->id, $wishIdOrig);
+            $move = $this->moveWishCopyImage($user->id, $wish->id, $wishIdTmp);
             // create the initial state for the Wish...
             $wishStatus = $this->newWishStatus($wish->id, 1);
             return 1;

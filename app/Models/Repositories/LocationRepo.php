@@ -1,6 +1,6 @@
 <?php
 
-namespace Wish\Repositories;
+namespace App\Models\Repositories;
 
 use App\Models\Entities\Location;
 
