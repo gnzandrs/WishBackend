@@ -77,12 +77,7 @@ class LocationController extends Controller
     public function getMarkers()
     {
       try {
-          $locations = $this->locationRepo->getMarkers();
-
-          if (Request::ajax())
-          {
-              return Response::json($locations);
-          }
+          return  $this->locationRepo->getMarkers();
       }
       catch (Exception $e)
       {
@@ -114,14 +109,7 @@ class LocationController extends Controller
     public function search($lat, $lng)
     {
       try {
-          $location = $this->locationRepo->search($lat,$lng);
-          if($location->count() == 0)
-          {
-              return View::make('location/location', array('location' => $location));
-          }
-          else{
-              return View::make('location/show', array('location' => $location));
-          }
+          return  $this->locationRepo->search($lat,$lng);
       }
       catch (Exception $e)
       {
