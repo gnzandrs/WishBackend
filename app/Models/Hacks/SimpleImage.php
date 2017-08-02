@@ -1,4 +1,6 @@
-<?php namespace App\Models\Entities\Hacks;
+<?php
+
+namespace App\Models\Hacks;
 /**
  * File: SimpleImage.php
  * Author: Simon Jarvis

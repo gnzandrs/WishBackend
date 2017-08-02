@@ -12,6 +12,58 @@ class WishRepo extends BaseRepo {
 
     protected $destinationImagePath;
 
+    /**
+     * Create the directory on the server to image storage
+     * and move the tmp images to this one.
+     * @param  \app\Models\Entities\Wish $wish
+     * @param  int  $wishIdTmp
+     * @return \app\Models\Entities\Wish $wish
+     */
+    public function createDirectoryStructure($wish, $wishIdTmp)
+    {
+        try{
+            $this->createDirectoryTree($wish);
+            $this->createWishDirectory($wish);
+            // move images from temp
+            $wishlist = $wish->WishList;
+            $user = $wishlist->User;
+            $move = $this->moveWishCopyImage($user->id, $wish->id, $wishIdTmp);
+            // create the initial state for the Wish...
+            $wishStatus = $this->newWishStatus($wish->id, 1);
+            return 1;
+        }
+        catch (Exception $e)
+        {
+            return 0;
+        }
+
+    }
+
+    public function createWishDirectory($wish)
+    {
+        try {
+            $public_path = public_path();
+            $user = $wish->WishList->user;
+            $wish_dir = $public_path."/assets/user/".$user->id.'/img/wish/'.$wish->id;
+
+            if (!file_exists($wish_dir))
+            {
+                mkdir($wish_dir, 0700);
+            }
+
+            // move tmp images from temp to new wish directory
+            $move = $this->moveWishTempImage($user->id, $wish->id);
+            // create the initial state for the Wish...
+            $wishStatus = $this->newWishStatus($wish->id, 1);
+
+            return true;
+        }
+        catch(Exception $e)
+        {
+            return true;
+        }
+    }
+
     public function getModel()
     {
         return new Wish;
@@ -386,6 +438,7 @@ class WishRepo extends BaseRepo {
             $wishImage->setUserId($userId);
             $wishImage->setWishId($wishId);
             $wishImage->setTmp(false);
+
             // get original source images
             $wishImagesOriginal = $this->wishImagesById($wishIdOrig);
             $move = true;
@@ -437,7 +490,7 @@ class WishRepo extends BaseRepo {
         $image->save($path.'/'.'tb_'.$file);
     }
 
-    public function afterCreate($wish)
+    public function createwWish($wish)
     {
         try{
             $this->createDirectoryTree($wish);
@@ -482,33 +535,6 @@ class WishRepo extends BaseRepo {
         }
 
         return $result;
-    }
-
-    /**
-     * Create the directory on the server to image storage
-     * and move the tmp images to this one.
-     * @param  \app\Models\Entities\Wish $wish
-     * @param  int  $wishIdTmp
-     * @return \app\Models\Entities\Wish $wish
-     */
-    public function createDirectoryStructure($wish, $wishIdTmp)
-    {
-        try{
-            $this->createDirectoryTree($wish);
-            $this->createWishDirectory($wish);
-            // move images from temp
-            $wishlist = $wish->WishList;
-            $user = $wishlist->User;
-            $move = $this->moveWishCopyImage($user->id, $wish->id, $wishIdTmp);
-            // create the initial state for the Wish...
-            $wishStatus = $this->newWishStatus($wish->id, 1);
-            return 1;
-        }
-        catch (Exception $e)
-        {
-            return 0;
-        }
-
     }
 
     public function checkForNewImages($wishId, $userId)
@@ -568,67 +594,6 @@ class WishRepo extends BaseRepo {
         catch (Exception $e)
         {
             return 0;
-        }
-    }
-
-    public function createDirectoryTree($wish)
-    {
-        try{
-            $public_path = public_path();
-            $wishlist = $wish->WishList;
-            $user = $wishlist->User;
-
-            $base = $public_path."/assets/user/".$user->id;
-            $base_img = $base.'/img';
-            $base_tmp = $base.'/tmp';
-            $base_wish = $base.'/img/wish';
-
-            if (!file_exists($base))
-            {
-                mkdir($base, 0700);
-            }
-
-            if (!file_exists($base_img))
-            {
-                mkdir($base_img, 0700);
-            }
-
-            if (!file_exists($base_tmp))
-            {
-                mkdir($base_tmp, 0700);
-            }
-
-            if (!file_exists($base_wish))
-            {
-                mkdir($base_wish, 0700);
-            }
-
-            return true;
-        }
-        catch(Exception $e)
-        {
-            return true;
-        }
-    }
-
-    public function createWishDirectory($wish)
-    {
-        try{
-            $public_path = public_path();
-            $wishlist = $wish->WishList;
-            $user = $wishlist->User;
-            $wish_dir = $public_path."/assets/user/".$user->id.'/img/wish/'.$wish->id;
-
-            if (!file_exists($wish_dir))
-            {
-                mkdir($wish_dir, 0700);
-            }
-
-            return true;
-        }
-        catch(Exception $e)
-        {
-            return true;
         }
     }
 

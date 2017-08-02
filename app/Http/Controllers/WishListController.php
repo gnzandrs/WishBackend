@@ -11,6 +11,7 @@ use App\Models\Repositories\WishListRepo;
 use App\Models\Repositories\WishRepo;
 use App\Models\Repositories\CategoryRepo;
 use App\Models\Repositories\UserRepo;
+use JWTAuth;
 
 class WishListController extends Controller
 {
@@ -28,67 +29,39 @@ class WishListController extends Controller
         $this->userRepo = $userRepo;
     }
 
-    // create wishlist view
-    public function create()
+    /**
+     * Create a newly wishlist.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response $response
+     */
+    public function store(Request $request)
     {
         try {
-            if (Auth::check())
+            $input = $request->all();
+            $user = JWTAuth::toUser($input['token']);
+            $wishList = $input['wishList'];
+
+            $newWishList = $this->wishlistRepo->newWishList();
+            $newWishList->user_id = $user->id;
+            $newWishList->name = $wishList['name'];
+            $newWishList->occasion = 'no one';
+            $newWishList->followers = 0;
+            $newWishList->notification = 0;
+            $newWishList->password = 'none';
+            $manager = new WishListManager($newWishList, $wishList);
+
+            if ($manager->save())
             {
-                return View::make('wishlist/create');
+                $this->wishlistRepo->createDirectoryStructure($newWishList);
+                return $newWishList->id;
             }
-            else{
-                return Redirect::route('user/login');
+            else {
+                return ['created' => false];
             }
         }
         catch (Exception $e)
         {
-            Log::error('WishListController create(): '.$e);
-            $this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
-            return 0;
-        }
-    }
-
-    // create a wishlist with a wish from id
-    public function createWithWish()
-    {
-        try {
-            if (Auth::check())
-            {
-                $wishId = Input::get('wishId');
-                $wishOrig = $this->wishRepo->find($wishId);
-
-                // create the list and add the wish...
-                $wishlist = $this->wishlistRepo->newWishList();
-                $wishlist->user_id = Auth::user()->id;
-                $wishlist->name = "Lista de " . Auth::user()->name;
-
-                if ($wishlist->save())
-                {
-                    $wish = $this->wishRepo->copy($wishOrig->id, $wishOrig->WishList->id);
-                    $wish->list_id = $wishlist->id;
-
-                    if($wish->save())
-                    {
-                        $this->wishRepo->afterCopy($wish, $wishOrig->id);
-                        return View::make('utils/modal/wishlist/edit', compact('wishlist'));
-                    }
-                    else{
-                        return 0;
-                    }
-                }
-                else{
-                    return 0;
-                }
-            }
-            else{
-                return Redirect::route('user/login');
-            }
-
-        }
-        catch (Exception $e)
-        {
-            Log::error('WishListController createWithWish(): '.$e);
-            $this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
             return 0;
         }
     }
@@ -154,35 +127,6 @@ class WishListController extends Controller
         catch (Exception $e)
         {
             Log::error('WishListController show(): '.$e);
-            $this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
-            return 0;
-        }
-    }
-
-    // store object in db
-    public function store()
-    {
-        try {
-            if (Auth::check())
-            {
-                $wishlist = $this->wishlistRepo->newWishList();
-                $wishlist->user_id = Auth::user()->id;
-                $manager = new WishListManager($wishlist, Input::all());
-                if ($manager->save())
-                {
-                    return $wishlist->id;
-                }
-                else{
-                    return 0;
-                }
-            }
-            else{
-                return Redirect::route('user/login');
-            }
-        }
-        catch (Exception $e)
-        {
-            Log::error('WishListController store(): '.$e);
             $this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
             return 0;
         }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WishList extends Model
 {
     protected $table = 'list';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'occasion', 'followers', 'notification', 'password'];
 
     public function user()
     {

@@ -8,6 +8,8 @@ use App\Models\Entities\WishImage;
 use App\Models\Managers\WishManager;
 use App\Models\Repositories\WishRepo;
 use App\Models\Repositories\CategoryRepo;
+use JWTAuth;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class WishController extends Controller
 {
@@ -75,6 +77,34 @@ class WishController extends Controller
       }
     }
 
+    public function store(Request $request)
+    {
+        try {
+            $wish = $this->wishRepo->newWish();
+            $input = $request->all();
+            $manager = new WishManager($wish, $input);
+
+            if ($manager->save())
+            {
+                if ($this->wishRepo->createWishDirectory($wish))
+                {
+                    return $wish->id;
+                }
+
+                return ['created' => false];
+            }
+            else {
+                return ['created' => false];
+            }
+        }
+        catch (Exception $e)
+        {
+            //Log::error('WishController store(): '.$e);
+            //$this->logRepo->newLog('WishController.php', 'WishController.php', 'error catch', $e);
+            return 0;
+        }
+    }
+
     // delete wish
     public function destroy()
     {
@@ -125,30 +155,24 @@ class WishController extends Controller
     }
 
     // delete the image from server
-    public function imageDelete()
+    public function imageDelete(Request $request)
     {
       try {
-          if (Auth::check())
+          $input = $request->all();
+          $userId = JWTAuth::toUser($input['token'])->id;
+          $imageName = $input['imgName'];
+          $imgId = $input['imgId'];
+          $wishId = $input['wishId'];
+
+          if ($imgId > 0)
           {
-              $userId = Auth::user()->id;
-              $imageName = Input::get('imgName');
-              $imgId = Input::get('imgId');
-              $wishId = Input::get('wishId');
-
-              if ($imgId > 0)
-              {
-                  $delete = $this->wishRepo->deleteImageFromWish($userId, $imageName, $wishId, $imgId);
-
-              }
-              else {
-                  $delete = $this->wishRepo->deleteImageFromTemp($userId, $imageName);
-              }
-
-              return json_encode($delete);
+              $delete = $this->wishRepo->deleteImageFromWish($userId, $imageName, $wishId, $imgId);
           }
-          else{
-              return Redirect::route('user/login');
+          else {
+              $delete = $this->wishRepo->deleteImageFromTemp($userId, $imageName);
           }
+
+          return json_encode($delete);
       }
       catch (Exception $e)
       {
@@ -203,22 +227,20 @@ class WishController extends Controller
     }
 
     // upload the wish's image
-    public function imageUpload()
+    public function imageUpload(Request $request)
     {
       try {
-          if (Auth::check())
-          {
-              $file = Input::file('file');
-              $upload_success = $this->wishRepo->newWishImage($file, Auth::user()->id);
+          $input = $request->all();
+          $user = JWTAuth::toUser($input['token']);
+          //$file = $input['file'];
+          $file = $request->file('file');
 
-              if( $upload_success ) {
-                  return Response::json('success', 200);
-              } else {
-                  return Response::json('error', 400);
-              }
-          }
-          else{
-              return Redirect::route('user/login');
+          $upload_success = $this->wishRepo->newWishImage($file, $user->id);
+
+          if( $upload_success ) {
+              return ['success' => 200];
+          } else {
+              return ['error' => 400];
           }
       }
       catch (Exception $e)
@@ -297,34 +319,6 @@ class WishController extends Controller
       catch (Exception $e)
       {
           Log::error('WishController show($id): '.$e);
-          $this->logRepo->newLog('WishController.php', 'WishController.php', 'error catch', $e);
-          return 0;
-      }
-    }
-
-    // store create wish
-    public function store()
-    {
-      try {
-          if (Auth::check())
-          {
-              $wish = $this->wishRepo->newWish();
-              $manager = new WishManager($wish, Input::all());
-              if($manager->save())
-              {
-                  return $this->wishRepo->afterCreate($wish);
-              }
-              else{
-                  return 0;
-              }
-          }
-          else{
-              return Redirect::route('user/login');
-          }
-      }
-      catch (Exception $e)
-      {
-          Log::error('WishController store(): '.$e);
           $this->logRepo->newLog('WishController.php', 'WishController.php', 'error catch', $e);
           return 0;
       }

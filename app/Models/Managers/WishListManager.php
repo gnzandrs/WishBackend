@@ -1,15 +1,15 @@
-<?php namespace Wish\Managers;
+<?php
+
+namespace App\Models\Managers;
 
 class WishListManager extends BaseManager {
 
     public function getRules()
     {
         $rules = [
-            'name'                  => 'required'
+            'name'  => 'required'
         ];
 
         return $rules;
     }
-
-
 } 
