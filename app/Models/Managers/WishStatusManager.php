@@ -1,4 +1,6 @@
-<?php namespace Wish\Managers;
+<?php
+
+namespace App\Models\Managers;
 
 class WishStatusManager extends BaseManager {
 
@@ -11,6 +13,4 @@ class WishStatusManager extends BaseManager {
 
         return $rules;
     }
-
-
 } 

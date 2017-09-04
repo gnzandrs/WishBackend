@@ -1,16 +1,17 @@
-<?php namespace Wish\Managers;
+<?php
+
+namespace App\Models\Managers;
 
 class LocationManager extends BaseManager {
 
     public function getRules()
     {
         $rules = [
-            'latitude'   => 'required',
-            'longitude'     => 'required'
+            'name'      => 'required',
+            'latitude'  => 'required',
+            'longitude' => 'required'
         ];
 
         return $rules;
     }
-
-
 } 

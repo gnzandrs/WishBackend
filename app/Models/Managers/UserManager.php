@@ -1,4 +1,6 @@
-<?php namespace App\Models\Managers;
+<?php
+
+namespace App\Models\Managers;
 
 class UserManager extends BaseManager {
 

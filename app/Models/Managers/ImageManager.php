@@ -1,4 +1,6 @@
-<?php namespace Wish\Managers;
+<?php
+
+namespace App\Models\Managers;
 
 class ImageManager extends BaseManager {
 
