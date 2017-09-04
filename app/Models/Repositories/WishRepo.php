@@ -367,10 +367,11 @@ class WishRepo extends BaseRepo {
         $upload = copy($origin, $destination);
     }
 
-    public function newWishImage($image, $userId)
+    public function newWishImage($image, $wishListId, $userId)
     {
         $wishImage = new WishImage();
         $wishImage->setUserId($userId);
+        $wishImage->setWishListId($wishListId);
         $wishImage->setTmp(true);
         $this->destinationImagePath = $wishImage->getDestinationPath();
         //$filename = str_random(12);

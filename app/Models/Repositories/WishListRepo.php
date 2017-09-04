@@ -28,42 +28,35 @@ class WishListRepo extends BaseRepo {
 
     }
 
-    public function createDirectoryTree($wishList)
+    /**
+     * Create a temporaly directory to save the images
+     * from wishes that belong to a temporaly wishlist
+     * before store it on the bd.
+     * @param  int  $tmpWishId
+     * @return int $result
+     */
+    public function createTempImageDirectory($tmpWishId, $userId)
     {
-        try{
+        try {
             $public_path = public_path();
-            $user = $wishList->User;
+            $baseWishListFolder = $public_path."/assets/user/".$userId."/tmp/wishlist";
+            $tempFolder = $baseWishListFolder.'/'.$tmpWishId;
 
-            $base = $public_path."/assets/user/".$user->id;
-            $base_img = $base.'/img';
-            $base_tmp = $base.'/tmp';
-            $base_wish = $base.'/img/wish';
-
-            if (!file_exists($base))
+            if (!file_exists($baseWishListFolder))
             {
-                mkdir($base, 0700);
+                mkdir($baseWishListFolder, 0700);
             }
 
-            if (!file_exists($base_img))
+            if (!file_exists($tempFolder))
             {
-                mkdir($base_img, 0700);
+                mkdir($tempFolder, 0700);
             }
 
-            if (!file_exists($base_tmp))
-            {
-                mkdir($base_tmp, 0700);
-            }
-
-            if (!file_exists($base_wish))
-            {
-                mkdir($base_wish, 0700);
-            }
-
-            return true;
+            return 1;
         }
-        catch(Exception $e)
+        catch (exception $e)
         {
-            return true;
+            return 0;
         }
     }
 

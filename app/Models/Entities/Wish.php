@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wish extends Model
 {
     protected $table = 'wish';
-    protected $fillable = ['description','reference','price', 'list_id', 'location_id', 'category_id'];
+    protected $fillable = ['description','reference','price', 'date', 'list_id', 'location_id', 'category_id'];
     protected $perPage = 3;
 
     public function wishlist()

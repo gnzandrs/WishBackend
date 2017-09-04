@@ -18,39 +18,46 @@ class UserRepo extends BaseRepo {
         return $user;
     }
 
+    /**
+     * Create a basic directory structure to storage
+     * the user's assets.
+     * @param  \App\Models\Entities\User
+     * @return bool $result
+     */
     public function createDirectoryTree($user)
     {
         try{
-            $public_path = public_path();
-            $base = $public_path.'/img/user/'.$user->id;
-            $base_img = $base.'/img';
-            $base_tmp = $base.'/tmp';
-            $base_profile = $base.'/img/profile';
-            $base_wish = $base.'/img/wish';
+            $publicPath = public_path();
+
+            $base = $publicPath."/assets/user/".$user->id;
+            $baseImg = $base.'/img';
+            $baseTmp = $base.'/tmp';
+            $baseWish = $base.'/img/wish';
+            $baseProfile = $base.'/img/profile';
 
             if (!file_exists($base))
             {
                 mkdir($base, 0700);
             }
 
-            if (!file_exists($base_img))
+            if (!file_exists($baseImg))
             {
-                mkdir($base_img, 0700);
+                mkdir($baseImg, 0700);
             }
 
-            if (!file_exists($base_tmp))
+            if (!file_exists($baseTmp))
             {
-                mkdir($base_tmp, 0700);
+                mkdir($baseTmp, 0700);
             }
 
-            if (!file_exists($base_profile))
+            if (!file_exists($baseWish))
             {
-                mkdir($base_profile, 0700);
+                mkdir($baseWish, 0700);
             }
 
-            if (!file_exists($base_wish))
+            if (!file_exists($baseProfile))
             {
-                mkdir($base_wish, 0700);
+                mkdir($baseProfile, 0700);
             }
 
             return true;
@@ -59,7 +66,6 @@ class UserRepo extends BaseRepo {
         {
             return true;
         }
-
     }
 
     public function getConfig($userId)

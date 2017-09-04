@@ -80,21 +80,24 @@ class WishController extends Controller
     public function store(Request $request)
     {
         try {
-            $wish = $this->wishRepo->newWish();
             $input = $request->all();
-            $manager = new WishManager($wish, $input);
+            $user = JWTAuth::toUser($input['token']);
+            $wish = $this->wishRepo->newWish();
+            $wish->date = date('Y-m-d H:i:s');
+            $manager = new WishManager($wish, $input['wish']);
 
             if ($manager->save())
             {
                 if ($this->wishRepo->createWishDirectory($wish))
                 {
-                    return $wish->id;
+                    return ['created' => true];
+                    //return $wish->id;
                 }
 
                 return ['created' => false];
             }
             else {
-                return ['created' => false];
+                return ['error' => $wish->errors];
             }
         }
         catch (Exception $e)
@@ -232,10 +235,11 @@ class WishController extends Controller
       try {
           $input = $request->all();
           $user = JWTAuth::toUser($input['token']);
+          $wishListId = $input['wishListId'];
           //$file = $input['file'];
           $file = $request->file('file');
 
-          $upload_success = $this->wishRepo->newWishImage($file, $user->id);
+          $upload_success = $this->wishRepo->newWishImage($file, $wishListId, $user->id);
 
           if( $upload_success ) {
               return ['success' => 200];

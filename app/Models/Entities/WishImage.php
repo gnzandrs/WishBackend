@@ -14,6 +14,7 @@ class WishImage extends Model
     protected $imageThumbName = "tb_wish.jpg";
     protected $userId;
     protected $wishId;
+    protected $wishListId;
 
     public function __construct()
     {
@@ -54,6 +55,17 @@ class WishImage extends Model
     {
         return $this->wishId;
     }
+
+    public function setWishListId($wishListId)
+    {
+        $this->wishListId = $wishListId;
+    }
+
+    public function getWishListId()
+    {
+        return $this->wishListId;
+    }
+
 
     public function setImageName($imageName)
     {
@@ -103,8 +115,8 @@ class WishImage extends Model
     public function createDestinationTmpPath()
     {
         $user = $this->userId;
-        $user_path = "assets/user/$user/tmp";
-        $this->setDestinationPath($user_path);
+        $userPath = "assets/user/$user/tmp/wishlist/".$this->wishListId;
+        $this->setDestinationPath($userPath);
     }
 
     public function getDefaultImage()

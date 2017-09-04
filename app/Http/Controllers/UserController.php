@@ -166,18 +166,4 @@ class UserController extends Controller
 
         return ['created' => true];
     }
-
-    /**
-     * Wishlist of user by id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response $wishlist
-     */
-    public function wishListShow($id)
-    {
-        $wishlist = $this->wishlistRepo->find($id);
-        $wishlist->Wishs;
-        $wishlist->User;
-        return $wishlist;
-    }
 }

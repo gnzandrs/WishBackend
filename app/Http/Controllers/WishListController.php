@@ -30,6 +30,28 @@ class WishListController extends Controller
     }
 
     /**
+     * Create a temporal directory to store the wishlist's images
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response $response
+     */
+    public function createImageDirectory(Request $request)
+    {
+        try {
+            $input = $request->all();
+            $user = JWTAuth::toUser($input['token']);
+            $wishListId = $input['wishListId'];
+
+            $this->wishlistRepo->createTempImageDirectory($wishListId, $user->id);
+            return ['created' => true];
+        }
+        catch (Exception $e)
+        {
+            return 0;
+        }
+    }
+
+    /**
      * Create a newly wishlist.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -116,18 +138,22 @@ class WishListController extends Controller
         }
     }
 
-    // show wish list view
-    public function show()
+    /**
+     * Get a wishlist by id
+     * @param  int $id
+     * @return \Illuminate\Http\Response $response
+     */
+    public function show($id)
     {
         try {
-            $userId = Auth::user()->id;
-            $wishlists = $this->userRepo->wishLists($userId);
-            return View::make('wishlist/show', compact('wishlists'));
+            $wishList = $this->wishlistRepo->find($id);
+            $wishList->wishs;
+            return $wishList;
         }
         catch (Exception $e)
         {
-            Log::error('WishListController show(): '.$e);
-            $this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
+            //Log::error('WishListController show(): '.$e);
+            //$this->logRepo->newLog('WishListController.php', 'WishListController.php', 'error catch', $e);
             return 0;
         }
     }
