@@ -7,6 +7,7 @@ use App\Models\Entities\Location;
 use App\Models\Managers\LocationManager;
 use App\Models\Repositories\LocationRepo;
 use App\Models\Repositories\WishRepo;
+use JWTAuth;
 
 class LocationController extends Controller
 {
@@ -73,7 +74,12 @@ class LocationController extends Controller
       }
     }
 
-    // get all the markers from the db
+    /**
+     * Get all the markers from the db
+     * @param  string $lat
+     * @param  string  $lng
+     * @return \app\Models\Entities\Location $location
+     */
     public function getMarkers()
     {
       try {
@@ -81,9 +87,9 @@ class LocationController extends Controller
       }
       catch (Exception $e)
       {
-          Log::error('LocationController getMarkers(): '.$e);
-          $this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
-          return 0;
+         //Log::error('LocationController getMarkers(): '.$e);
+         // $this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
+         return 0;
       }
     }
 
@@ -105,7 +111,12 @@ class LocationController extends Controller
       }
     }
 
-    // search a location by latitud and longitud parameters
+    /**
+     * Search a location by latitud and longitud parameters
+     * @param  string $lat
+     * @param  string  $lng
+     * @return \app\Models\Entities\Location $location
+     */
     public function search($lat, $lng)
     {
       try {
@@ -113,8 +124,8 @@ class LocationController extends Controller
       }
       catch (Exception $e)
       {
-          Log::error('LocationController search($lat, $lng): '.$e);
-          $this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
+          //Log::error('LocationController search($lat, $lng): '.$e);
+          //$this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
           return 0;
       }
     }
@@ -135,29 +146,33 @@ class LocationController extends Controller
       }
     }
 
-    // store a new location
-    public function store()
+    /**
+     * Store a new location
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response $response
+     */
+    public function store(Request $request)
     {
       try {
-          $location = $this->locationRepo->newLocation();
-          $data = Input::all();
+          $input = $request->all();
+          $userId = JWTAuth::toUser($input['token'])->id;
 
-          $manager = new LocationManager($location, Input::all());
-          if($manager->save())
+          $location = $this->locationRepo->newLocation();
+          $manager = new LocationManager($location, $request->input('location'));
+          $result = $manager->save();
+
+          if ($result)
           {
-              if (Request::ajax())
-              {
-                  return $location->id;
-              }
-          }
-          else{
-              return 0;
+              return [  'created' => true,
+                        'id' => $location->id ];
+          } else {
+              return response()->json($location->errors);
           }
       }
       catch (Exception $e)
       {
-          Log::error('LocationController store(): '.$e);
-          $this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
+          //Log::error('LocationController store(): '.$e);
+          //$this->logRepo->newLog('LocationController.php', 'LocationController.php', 'error catch', $e);
           return 0;
       }
     }
