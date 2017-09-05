@@ -77,6 +77,29 @@ class WishController extends Controller
       }
     }
 
+    /**
+     * Create a temporal directory to store the wishes's images
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response $response
+     */
+    public function createWishDirectory(Request $request)
+    {
+        try {
+            $input = $request->all();
+            $user = JWTAuth::toUser($input['token']);
+            $wishListId = $input['wishListId'];
+            $wishId = $input['wishId'];
+
+            $this->wishRepo->createTempImageDirectory($user->id, $wishListId, $wishId);
+            return ['created' => true];
+        }
+        catch (Exception $e)
+        {
+            return 0;
+        }
+    }
+
     public function store(Request $request)
     {
         try {

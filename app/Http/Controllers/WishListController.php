@@ -75,7 +75,7 @@ class WishListController extends Controller
 
             if ($manager->save())
             {
-                $this->wishlistRepo->createDirectoryStructure($newWishList);
+                $this->wishlistRepo->moveImagesFromTemp($newWishList);
                 return $newWishList->id;
             }
             else {

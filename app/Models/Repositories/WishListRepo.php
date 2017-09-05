@@ -9,23 +9,21 @@ use App\Models\Entities\WishStatus;
 class WishListRepo extends BaseRepo {
 
     /**
-     * Create the directory on the server to image storage
-     * for wish that will be include on it
+     * Move the images stored on the temporaly folder
+     * to the real location.
      * @param  \app\Models\Entities\WishList $wishList
-     * @param  int  $wishIdTmp
-     * @return \app\Models\Entities\Wish $wish
+     * @return int $result
      */
-    public function createDirectoryStructure($wishList)
+    public function moveImagesFromTemp($wishList)
     {
         try{
-            $this->createDirectoryTree($wishList);
+
             return 1;
         }
         catch (Exception $e)
         {
             return 0;
         }
-
     }
 
     /**
