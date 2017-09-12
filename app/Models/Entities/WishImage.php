@@ -98,7 +98,7 @@ class WishImage extends Model
       {
           $this->createDestinationTmpPath();
       }
-      else{
+      else {
           $this->createDestinationPath();
       }
       return $this->destinationPath;
@@ -115,7 +115,7 @@ class WishImage extends Model
     public function createDestinationTmpPath()
     {
         $user = $this->userId;
-        $userPath = "assets/user/$user/tmp/wishlist/".$this->wishListId;
+        $userPath = "assets/user/$user/tmp/wishlist/$this->wishListId/$this->wishId";
         $this->setDestinationPath($userPath);
     }
 

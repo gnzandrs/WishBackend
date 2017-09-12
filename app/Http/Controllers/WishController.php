@@ -96,7 +96,7 @@ class WishController extends Controller
         }
         catch (Exception $e)
         {
-            return 0;
+            return ['created' => false];
         }
     }
 
@@ -259,10 +259,10 @@ class WishController extends Controller
           $input = $request->all();
           $user = JWTAuth::toUser($input['token']);
           $wishListId = $input['wishListId'];
-          //$file = $input['file'];
+          $wishId = $input['wishId'];
           $file = $request->file('file');
 
-          $upload_success = $this->wishRepo->newWishImage($file, $wishListId, $user->id);
+          $upload_success = $this->wishRepo->newWishImage($file, $user->id, $wishListId, $wishId);
 
           if( $upload_success ) {
               return ['success' => 200];

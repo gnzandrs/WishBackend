@@ -56,7 +56,7 @@ class WishRepo extends BaseRepo {
 
             if (!file_exists($tempWishFolder))
             {
-                mkdir($baseWishListFolder, 0700);
+                mkdir($tempWishFolder, 0700);
             }
 
             return 1;
@@ -395,11 +395,12 @@ class WishRepo extends BaseRepo {
         $upload = copy($origin, $destination);
     }
 
-    public function newWishImage($image, $wishListId, $userId)
+    public function newWishImage($image, $userId, $wishListId, $wishId)
     {
         $wishImage = new WishImage();
         $wishImage->setUserId($userId);
         $wishImage->setWishListId($wishListId);
+        $wishImage->setWishId($wishId);
         $wishImage->setTmp(true);
         $this->destinationImagePath = $wishImage->getDestinationPath();
         //$filename = str_random(12);

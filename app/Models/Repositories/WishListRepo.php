@@ -31,13 +31,14 @@ class WishListRepo extends BaseRepo {
      * from wishes that belong to a temporaly wishlist
      * before store it on the bd.
      * @param  int  $tmpWishId
+     * @param  int  $userId
      * @return int $result
      */
     public function createTempImageDirectory($tmpWishId, $userId)
     {
         try {
             $public_path = public_path();
-            $baseWishListFolder = $public_path."/assets/user/".$userId."/tmp/wishlist";
+            $baseWishListFolder = $public_path."/assets/user/$userId/tmp/wishlist";
             $tempFolder = $baseWishListFolder.'/'.$tmpWishId;
 
             if (!file_exists($baseWishListFolder))
